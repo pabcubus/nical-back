@@ -20,11 +20,33 @@ router.get('/', function(req, res) {
 					as: 'ciudad'
 				}]
 			})
-		.then(function(roles){
-			return res.json(roles);
+		.then(function(tiendas){
+			return res.json(tiendas);
 		});
 	});
 });
+
+/*
+router.get('/getTiendasByCodigo/:codigo', function(req, res) {
+	var codigo = req.params.codigo;
+
+	connection.sync().then(function() {
+		Tienda.findAll({
+				include: [{
+					model: Ciudad,
+					as: 'ciudad'
+				}]
+			})
+		.then(function(tiendas){
+			var result = _.filter(tiendas, function(tienda){
+				return tienda.id.toString.indexOf
+			});
+
+			return res.json(result);
+		});
+	});
+});
+*/
 
 // Return router
 module.exports = router;
