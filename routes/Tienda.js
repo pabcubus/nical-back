@@ -14,7 +14,12 @@ router.use(function(req, res, next) {
 
 router.get('/', function(req, res) {
 	connection.sync().then(function() {
-		Permiso.findAll()
+		Tienda.findAll({
+				include: [{
+					model: Ciudad,
+					as: 'ciudad'
+				}]
+			})
 		.then(function(roles){
 			return res.json(roles);
 		});
