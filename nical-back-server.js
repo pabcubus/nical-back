@@ -31,6 +31,7 @@ require('./persistence/config').start(Sequelize, connection);
 app.set('connection', connection);
 
 // Routes
+app.use('/api/usuario', require('./routes/Usuario'));
 app.use('/api/ciudad', require('./routes/Ciudad'));
 app.use('/api/tienda', require('./routes/Tienda'));
 

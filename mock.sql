@@ -1,37 +1,7 @@
 --CREATE USER midomadmin WITH PASSWORD 'midom2015';
 
 drop schema public cascade;
-create schema public;
-
-CREATE TABLE rol
-(
-	id serial NOT NULL,
-	nombre character varying(30),
-	codigo character varying(30),
-	descripcion character varying(30),
-	activo boolean,
-	creado timestamp without time zone,
-	CONSTRAINT rol_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE usuario
-(
-	id serial NOT NULL,
-	"rolId" integer,
-	token character varying(500),
-	token_valid timestamp without time zone,
-	nombre character varying(30),
-	apellido character varying(30),
-	username character varying(30),
-	password character varying(500),
-	email character varying(30),
-	creado timestamp without time zone,
-	activo boolean,
-	CONSTRAINT usuario_pk PRIMARY KEY (id),
-	CONSTRAINT usuario_rol_fk FOREIGN KEY ("rolId")
-		REFERENCES rol (id) MATCH SIMPLE
-		ON UPDATE NO ACTION ON DELETE NO ACTION
-);
+create schema public;	
 
 CREATE TABLE regional
 (
@@ -71,13 +41,37 @@ CREATE TABLE tienda
 		ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-insert into rol (nombre, codigo, activo, creado) values ('Admin', 'ADM', true, current_timestamp);
-insert into rol (nombre, codigo, activo, creado) values ('Operador', 'OPR', true, current_timestamp);
+CREATE TABLE rol
+(
+	id serial NOT NULL,
+	nombre character varying(30),
+	codigo character varying(30),
+	descripcion character varying(30),
+	activo boolean,
+	creado timestamp without time zone,
+	CONSTRAINT rol_pk PRIMARY KEY (id)
+);
 
-insert into usuario ("rolId", nombre, apellido, username, password, email, creado, activo)
-values ((select id from rol where codigo = 'ADM'), 'Pablo', 'Bassil', 'pabcubus', '123', 'pabcubus@gmail.com', current_timestamp, true);
-insert into usuario ("rolId", nombre, apellido, username, password, email, creado, activo)
-values ((select id from rol where codigo = 'OPR'), 'Nazli', 'Habibe', 'nhabibe', '123', 'nhabibe@gmail.com', current_timestamp, true);
+CREATE TABLE usuario
+(
+	id serial NOT NULL,
+	"rolId" integer,
+	"tiendaId" integer,
+	nombre character varying(30),
+	apellido character varying(30),
+	username character varying(30),
+	password character varying(500),
+	email character varying(30),
+	creado timestamp without time zone,
+	activo boolean,
+	CONSTRAINT usuario_pk PRIMARY KEY (id),
+	CONSTRAINT usuario_rol_fk FOREIGN KEY ("rolId")
+		REFERENCES rol (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT usuario_tienda_fk FOREIGN KEY ("tiendaId")
+		REFERENCES tienda (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION
+);
 
 INSERT INTO regional (id, descripcion, creado, activo) VALUES (1, 'ARMENIA', current_timestamp, true);
 INSERT INTO regional (id, descripcion, creado, activo) VALUES (2, 'BARRANQUILLA', current_timestamp, true);
@@ -398,7 +392,13 @@ insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuest
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (389, 1, 'SDO389', 'SDO PLAZA AVENTURA', 288756, 157500, current_timestamp, true);
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (701, 1, 'STO701', 'STO CIENAGA 2', 93347, 399000, current_timestamp, true);
 
+insert into rol (nombre, codigo, activo, creado) values ('Admin', 'ADM', true, current_timestamp);
+insert into rol (nombre, codigo, activo, creado) values ('Operador', 'OPR', true, current_timestamp);
 
+insert into usuario ("rolId", "tiendaId", nombre, apellido, username, password, email, creado, activo)
+values ((select id from rol where codigo = 'ADM'), 119, 'Pablo', 'Bassil', 'pabcubus', '123', 'pabcubus@gmail.com', current_timestamp, true);
+insert into usuario ("rolId", "tiendaId", nombre, apellido, username, password, email, creado, activo)
+values ((select id from rol where codigo = 'OPR'), 892, 'Nazli', 'Habibe', 'nhabibe', '123', 'nhabibe@gmail.com', current_timestamp, true);
 
 /*
 CREATE ROLE pqrs LOGIN

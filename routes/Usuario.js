@@ -14,39 +14,48 @@ router.use(function(req, res, next) {
 
 router.get('/', function(req, res) {
 	connection.sync().then(function() {
-		Tienda.findAll({
+		Usuario.findAll({
 				include: [{
-					model: Ciudad,
-					as: 'ciudad'
+					model: Rol,
+					as: 'rol'
+				},{
+					model: Tienda,
+					as: 'tienda'
 				}]
 			})
-		.then(function(tiendas){
-			return res.json(tiendas);
+		.then(function(usuarios){
+			return res.json(usuarios);
 		});
 	});
 });
 
-router.get('/:id', function(req, res) {
-	var id = req.params.id;
+router.get('/:username', function(req, res) {
+	var username = req.params.username;
 
 	connection.sync().then(function() {
-		Tienda.findAll({
+		Usuario.findAll({
 				where: {
-					id: {
-						$eq: id
+					username: {
+						$eq: username
+					},
+					activo: {
+						$eq: true
 					}
 				},
 				include: [{
-					model: Ciudad,
-					as: 'ciudad'
+					model: Rol,
+					as: 'rol'
+				},{
+					model: Tienda,
+					as: 'tienda'
 				}]
 			})
-		.then(function(tiendas){
-			if (tiendas.length > 0) {
-				return res.json(tiendas[0]);
+		.then(function(usuarios){
+			if (usuarios.length > 0) {
+				return res.json(usuarios[0]);
 			} else {
 				return res.status(406).json({
-					message: 'Tienda no válida'
+					message: 'Usuario no válido o inactivo'
 				});
 			}
 		});
