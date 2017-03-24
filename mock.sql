@@ -1,7 +1,7 @@
 --CREATE USER midomadmin WITH PASSWORD 'midom2015';
 
 drop schema public cascade;
-create schema public;	
+create schema public;
 
 CREATE TABLE regional
 (
@@ -51,6 +51,49 @@ CREATE TABLE rol
 	creado timestamp without time zone,
 	CONSTRAINT rol_pk PRIMARY KEY (id)
 );
+
+insert into rol (id, nombre, codigo, activo, creado) values (1, 'Admin', 'ADM', true, current_timestamp);
+insert into rol (id, nombre, codigo, activo, creado) values (2, 'Operador', 'OPR', true, current_timestamp);
+
+CREATE TABLE pagina
+(
+	id serial NOT NULL,
+	nombre character varying(30),
+	activo boolean,
+	creado timestamp without time zone,
+	CONSTRAINT pagina_pk PRIMARY KEY (id)
+);
+
+insert into pagina (id, nombre, activo, creado) values (1, 'perfil', true, current_timestamp);
+insert into pagina (id, nombre, activo, creado) values (2, 'carrito', true, current_timestamp);
+insert into pagina (id, nombre, activo, creado) values (3, 'tienda', true, current_timestamp);
+insert into pagina (id, nombre, activo, creado) values (4, 'pedido', true, current_timestamp);
+insert into pagina (id, nombre, activo, creado) values (5, 'usuario', true, current_timestamp);
+insert into pagina (id, nombre, activo, creado) values (6, 'producto', true, current_timestamp);
+
+CREATE TABLE permiso
+(
+	id serial NOT NULL,
+	"rolId" integer,
+	"paginaId" integer,
+	creado timestamp without time zone,
+	CONSTRAINT permiso_pk PRIMARY KEY (id),
+	CONSTRAINT permiso_rol_fk FOREIGN KEY ("rolId")
+		REFERENCES rol (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT permiso_pagina_fk FOREIGN KEY ("paginaId")
+		REFERENCES pagina (id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+insert into permiso ("rolId", "paginaId", creado) values (1, 1, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (1, 2, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (1, 3, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (1, 4, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (1, 5, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (1, 6, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (2, 1, current_timestamp);
+insert into permiso ("rolId", "paginaId", creado) values (2, 2, current_timestamp);
 
 CREATE TABLE usuario
 (
@@ -391,9 +434,6 @@ insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuest
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (122, 1, 'STO122', 'STO EL CARMELO', 277099, 399000, current_timestamp, true);
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (389, 1, 'SDO389', 'SDO PLAZA AVENTURA', 288756, 157500, current_timestamp, true);
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (701, 1, 'STO701', 'STO CIENAGA 2', 93347, 399000, current_timestamp, true);
-
-insert into rol (nombre, codigo, activo, creado) values ('Admin', 'ADM', true, current_timestamp);
-insert into rol (nombre, codigo, activo, creado) values ('Operador', 'OPR', true, current_timestamp);
 
 insert into usuario ("rolId", "tiendaId", nombre, apellido, username, password, email, creado, activo)
 values ((select id from rol where codigo = 'ADM'), 119, 'Pablo', 'Bassil', 'pabcubus', '123', 'pabcubus@gmail.com', current_timestamp, true);

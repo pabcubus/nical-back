@@ -17,7 +17,15 @@ router.get('/', function(req, res) {
 		Usuario.findAll({
 				include: [{
 					model: Rol,
-					as: 'rol'
+					as: 'rol',
+					include: [{
+						model: Permiso,
+						as: 'permisos',
+						include: [{
+							model: Pagina,
+							as: 'pagina'
+						}]
+					}]
 				},{
 					model: Tienda,
 					as: 'tienda'
@@ -44,7 +52,15 @@ router.get('/:username', function(req, res) {
 				},
 				include: [{
 					model: Rol,
-					as: 'rol'
+					as: 'rol',
+					include: [{
+						model: Permiso,
+						as: 'permisos',
+						include: [{
+							model: Pagina,
+							as: 'pagina'
+						}]
+					}]
 				},{
 					model: Tienda,
 					as: 'tienda'
