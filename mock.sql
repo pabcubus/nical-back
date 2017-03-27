@@ -108,6 +108,7 @@ CREATE TABLE usuario
 	creado timestamp without time zone,
 	activo boolean,
 	CONSTRAINT usuario_pk PRIMARY KEY (id),
+	CONSTRAINT usuario_username_uq UNIQUE (username),
 	CONSTRAINT usuario_rol_fk FOREIGN KEY ("rolId")
 		REFERENCES rol (id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -436,9 +437,9 @@ insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuest
 insert into tienda (id, "ciudadId", codigo, nombre, presupuesto_tope, presupuesto_global, creado, activo) values (701, 1, 'STO701', 'STO CIENAGA 2', 93347, 399000, current_timestamp, true);
 
 insert into usuario ("rolId", "tiendaId", nombre, apellido, username, password, email, creado, activo)
-values ((select id from rol where codigo = 'ADM'), 119, 'Pablo', 'Bassil', 'pabcubus', '123', 'pabcubus@gmail.com', current_timestamp, true);
+values ((select id from rol where codigo = 'ADM'), 119, 'Pablo', 'Bassil', 'pabcubus', '202cb962ac59075b964b07152d234b70', 'pabcubus@gmail.com', current_timestamp, true);
 insert into usuario ("rolId", "tiendaId", nombre, apellido, username, password, email, creado, activo)
-values ((select id from rol where codigo = 'OPR'), 892, 'Nazli', 'Habibe', 'nhabibe', '123', 'nhabibe@gmail.com', current_timestamp, true);
+values ((select id from rol where codigo = 'OPR'), 892, 'Nazli', 'Habibe', 'nhabibe', '202cb962ac59075b964b07152d234b70', 'nhabibe@gmail.com', current_timestamp, true);
 
 /*
 CREATE ROLE pqrs LOGIN
